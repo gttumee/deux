@@ -25,7 +25,7 @@ class CreateProject extends CreateRecord
             ->body("New Project {$project->id} {$project->name} created")
             ->actions([
                 Action::make('view')->url(
-                    Project::getUrl('view',['record'=>$project])
+                    ProjectResource::getUrl('create',['record'=>$project])
                 ),
             ]);
         $notification->sendToDatabase($user);

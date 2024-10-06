@@ -23,7 +23,7 @@ class EditProject extends EditRecord
             ->body("Project {$project->id} {$project->name} edited")
             ->actions([
                 Action::make('view')->url(
-                    Project::getUrl('view',['record'=>$project])
+                    ProjectResource::getUrl('view',['record'=>$project])
                 ),
             ]);
         $notification->sendToDatabase($user);
