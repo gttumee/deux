@@ -13,6 +13,7 @@ use Filament\Notifications\Notification;
 
 class CreateProject extends CreateRecord
 {
+    protected static ?string $pollingInterval = '10s';
     protected static string $resource = ProjectResource::class;
     
     protected function getRedirectUrl(): string
@@ -21,11 +22,11 @@ class CreateProject extends CreateRecord
         $project = $this->record;
         $notification = Notification::make()
             ->success()
-            ->title('Project created successfully')
+            ->title("Project created {$project->name}successfully")
             ->body("New Project {$project->id} {$project->name} created")
             ->actions([
                 Action::make('view')->url(
-                    ProjectResource::getUrl('create',['record'=>$project])
+                    ProjectResource::getUrl('view',['record'=>$project])
                 ),
             ]);
         $notification->sendToDatabase($user);
