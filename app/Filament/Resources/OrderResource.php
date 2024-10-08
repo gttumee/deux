@@ -66,7 +66,7 @@ class OrderResource extends Resource
                     'attachFiles',
                     'codeBlock',
                   ]),
-                Select::make('user_id')->label('User')->options(User::all()->pluck('name', 'id'))->required(), 
+                Select::make('user_id')->label('Send to')->options(User::all()->pluck('name', 'id'))->required(), 
                 Select::make('status')
                     ->options([
                     'New' => 'New',
@@ -78,8 +78,11 @@ class OrderResource extends Resource
                 ->default('new')
                 ->required(),   
                 DateTimePicker::make('end_date')
+                ->label('end_date')
+                ->live(onBlur: true)
+                ->displayFormat('d/m/Y')
                 ->required(),
-                FileUpload::make('file_name')->label('File Upload')
+                // FileUpload::make('file_name')->label('File Upload')
                     ]);
     }
 
@@ -113,9 +116,9 @@ class OrderResource extends Resource
                 ->label('End Date'),
                 TextColumn::make('user.name') 
                 ->label('User') 
-                ->sortable(),
-                
+                ->sortable()
             ])
+            ->defaultSort('id', 'desc')
             ->filters([
                 Filter::make('id')
                     ->form([
@@ -216,7 +219,7 @@ class OrderResource extends Resource
             TextEntry::make('user.name')->label('User name'),
             TextEntry::make('status')->badge(),
             TextEntry::make('project.name')->label('Project Name'),
-            TextEntry::make('explanation')->label('Explanation'),
+            TextEntry::make('explanation')->label('Explanation')->html(),
             TextEntry::make('created_at')->label('Create At'),
             TextEntry::make('end_date')->label('End Date')->badge(),
             CommentsEntry::make('filament_comments'),

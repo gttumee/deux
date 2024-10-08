@@ -14,6 +14,7 @@ use Filament\Notifications\Actions\Action;
 class CreateOrder extends CreateRecord
 {
     protected static string $resource = OrderResource::class;
+    protected static bool $canCreateAnother = false;
     protected function getRedirectUrl(): string
     {
         $user = auth()->user();

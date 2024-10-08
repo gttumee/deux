@@ -14,6 +14,7 @@ use Filament\Notifications\Notification;
 class CreateProject extends CreateRecord
 {
     protected static ?string $pollingInterval = '10s';
+    protected static bool $canCreateAnother = false;
     protected static string $resource = ProjectResource::class;
     
     protected function getRedirectUrl(): string
