@@ -57,7 +57,7 @@ class OrderResource extends Resource
             TextInput::make('name')->required()->maxLength(255)->label('Order name')
                 ->columnSpan('full')
                 ->placeholder('Order name')
-                ->require(),
+                ->required(),
             RichEditor::make('explanation')->maxLength(255)
                 ->columnSpan('full')
                 ->placeholder('file pass and explanation')
