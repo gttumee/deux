@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('explanation')->nullable();
             $table->string('status')->nullable();
-            $table->string('file_name')->nullable();
+            $table->string('end_time')->nullable();
             $table->dateTime('end_date');
             $table->foreignId('user_id')->constrained()->onDelete('cascade')->nullable(); 
             $table->foreignId('project_id')->constrained()->onDelete('cascade');

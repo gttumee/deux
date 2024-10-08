@@ -19,6 +19,7 @@ class Order extends Model
         'file_name',
         'start_date',
         'end_date',
+        'end_time',
         'project_id',
         'user_id'
     ];

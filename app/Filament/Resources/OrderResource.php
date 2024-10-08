@@ -43,21 +43,22 @@ class OrderResource extends Resource
     protected static ?int $navigationSort = 3;
     
     public static function form(Form $form): Form
-    {
-        $latestId = Order::max('id'); 
-        $newId = $latestId ? $latestId + 1 : 1; 
-        return $form
-            ->schema([
-                TextInput::make('id')->label('Order No')->default($newId)->disabled()
+{
+    $latestId = Order::max('id'); 
+    $newId = $latestId ? $latestId + 1 : 1; 
+    return $form
+        ->schema([
+            TextInput::make('id')->label('Order No')->default($newId)->disabled()
                 ->columnSpan('full'),
-                Select::make('project_id')->label('Select Project')->options(Project::all()->pluck('name', 'id'))->required()
+            Select::make('project_id')->label('Select Project')->options(Project::all()->pluck('name', 'id'))
+                ->required()
                 ->columnSpan('full')
                 ->placeholder('Choose project'),
-                TextInput::make('name')->required()->maxLength(255)->label('Order name')
+            TextInput::make('name')->required()->maxLength(255)->label('Order name')
                 ->columnSpan('full')
-                ->required()
-                ->placeholder('Order name'),
-                RichEditor::make('explanation')->maxLength(255)
+                ->placeholder('Order name')
+                ->require(),
+            RichEditor::make('explanation')->maxLength(255)
                 ->columnSpan('full')
                 ->placeholder('file pass and explanation')
                 ->disableToolbarButtons([
@@ -65,27 +66,29 @@ class OrderResource extends Resource
                     'strike',
                     'attachFiles',
                     'codeBlock',
-                  ]),
-                Select::make('user_id')->label('Send to')->options(User::all()->pluck('name', 'id'))->required(), 
-                Select::make('status')
-                    ->options([
+                ]),
+            Select::make('user_id')->label('Send to')->options(User::all()->pluck('name', 'id'))->required(), 
+            Select::make('status')
+                ->options([
                     'New' => 'New',
                     'Process' => 'Process',
                     'Review' => 'Review',
                     'Finish' => 'Finish',
-                    ])
+                ])
                 ->native(false)
-                ->default('new')
-                ->required(),   
-                DateTimePicker::make('end_date')
-                ->label('end_date')
-                ->live(onBlur: true)
-                ->displayFormat('d/m/Y')
+                ->default('New')
                 ->required(),
-                // FileUpload::make('file_name')->label('File Upload')
-                    ]);
-    }
-
+            DatePicker::make('end_date')
+            ->required(),
+            TextInput::make('end_time')
+                ->label('End Time (HH)')
+                ->maxLength(2)
+                ->maxValue(23)
+                ->minValue(0)
+                ->placeholder('12')
+                ->numeric(), 
+        ]);
+}
     public static function table(Table $table): Table
     {
         return $table
@@ -111,9 +114,12 @@ class OrderResource extends Resource
                 ->formatStateUsing(fn ($state) => $state ? Carbon::parse($state)->format('Y-m-d') : '不明')->sortable()
                 ->label('Create Date'),
                 TextColumn::make('end_date')
-                ->formatStateUsing(fn ($state) => $state ? Carbon::parse($state)->format('Y-m-d H:i:s') : '不明')->sortable()
+                ->formatStateUsing(fn ($state) => $state ? Carbon::parse($state)->format('Y-m-d') : '不明')->sortable()
                 ->badge()
                 ->label('End Date'),
+                TextColumn::make('end_time')
+                ->badge()
+                ->label('End Time'),
                 TextColumn::make('user.name') 
                 ->label('User') 
                 ->sortable()
@@ -222,6 +228,7 @@ class OrderResource extends Resource
             TextEntry::make('explanation')->label('Explanation')->html(),
             TextEntry::make('created_at')->label('Create At'),
             TextEntry::make('end_date')->label('End Date')->badge(),
+            TextEntry::make('end_time')->label('End Time')->badge(),
             CommentsEntry::make('filament_comments'),
         ]);
         
