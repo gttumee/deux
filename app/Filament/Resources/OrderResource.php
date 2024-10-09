@@ -227,7 +227,7 @@ class OrderResource extends Resource
             TextEntry::make('project.name')->label('Project Name'),
             TextEntry::make('explanation')->label('Explanation')->html(),
             TextEntry::make('created_at')->label('Create At'),
-            TextEntry::make('end_date')->label('End Date')->badge(),
+            TextEntry::make('end_date')->label('End Date')->badge()->date(), // 表示フォーマットを指定
             TextEntry::make('end_time')->label('End Time')->badge(),
             CommentsEntry::make('filament_comments'),
         ]);
