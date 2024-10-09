@@ -58,7 +58,7 @@ class OrderResource extends Resource
                 ->columnSpan('full')
                 ->placeholder('Order name')
                 ->required(),
-            RichEditor::make('explanation')->maxLength(255)
+            RichEditor::make('explanation')
                 ->columnSpan('full')
                 ->placeholder('file pass and explanation')
                 ->disableToolbarButtons([
