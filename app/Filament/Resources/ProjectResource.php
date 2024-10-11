@@ -35,7 +35,7 @@ class ProjectResource extends Resource
         ->schema([
           TextInput::make('name')->required()->maxLength(255)
           ->columnSpan('full'),
-          RichEditor::make('explanation')->required()->maxLength(255)
+          RichEditor::make('Description')->required()->maxLength(255)
           ->columnSpan('full')
           ->disableToolbarButtons([
             'blockquote',
@@ -71,7 +71,8 @@ class ProjectResource extends Resource
                 'finish' => 'success',
                  default => 'default',
             }),
-            TextColumn::make('created_at'),
+            TextColumn::make('created_at')
+            ->label('Create Date'),
             TextColumn::make('end_date'),
         ])
             ->filters([

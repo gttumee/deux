@@ -3,20 +3,17 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\OrderResource\Pages;
-use App\Filament\Resources\OrderResource\RelationManagers;
 use App\Models\Order;
 use App\Models\Project;
 use App\Models\User;
 use Carbon\Carbon;
-use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\Grid;
+use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -26,12 +23,7 @@ use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Infolists\Infolist;
-use Parallax\FilamentComments\Actions\CommentsAction;
 use Parallax\FilamentComments\Infolists\Components\CommentsEntry;
-
-
-
-
 class OrderResource extends Resource
 {
     public static function getNavigationBadge(): ?string
@@ -58,9 +50,9 @@ class OrderResource extends Resource
                 ->columnSpan('full')
                 ->placeholder('Order name')
                 ->required(),
-            RichEditor::make('explanation')
+            RichEditor::make('Description')
                 ->columnSpan('full')
-                ->placeholder('file pass and explanation')
+                ->placeholder('Description and File URL')
                 ->disableToolbarButtons([
                     'blockquote',
                     'strike',
@@ -98,7 +90,7 @@ class OrderResource extends Resource
             ->columns([
                 TextColumn::make('id')
                 ->label('Order No')->sortable(),
-                TextColumn::make('name')->sortable(),
+                TextColumn::make('name')->label('Order name')->sortable(),
                 TextColumn::make('project.name')->label('Project Name'),
                 TextColumn::make('status')
                 ->sortable()
@@ -121,7 +113,7 @@ class OrderResource extends Resource
                 ->badge()
                 ->label('End Time'),
                 TextColumn::make('user.name') 
-                ->label('User') 
+                ->label('Assignee') 
                 ->sortable()
             ])
             ->defaultSort('id', 'desc')
@@ -143,7 +135,7 @@ class OrderResource extends Resource
             
                 Filter::make('name')
                     ->form([
-                        TextInput::make('name')->label('Name'),
+                        TextInput::make('name')->label('Order Name'),
                     ])
                     ->query(function (Builder $query, $data) {
                         $searchWord = $data['name'] ?? null;
@@ -175,10 +167,10 @@ class OrderResource extends Resource
                         );
                     }),
             
-                Filter::make('Username')
+                Filter::make('Assignee')
                     ->form([
                         Select::make('user_id')
-                            ->label('User')
+                            ->label('Assignee')
                             ->options(User::all()->pluck('name', 'id'))
                     ])
                     ->query(function (Builder $query, $data) {
@@ -220,16 +212,38 @@ class OrderResource extends Resource
 {
     return $infolist
         ->schema([
-            TextEntry::make('id')->label('Order No'),
-            TextEntry::make('name')->label('Order Name'),
-            TextEntry::make('user.name')->label('User name'),
-            TextEntry::make('status')->badge(),
-            TextEntry::make('project.name')->label('Project Name'),
-            TextEntry::make('explanation')->label('Explanation')->html(),
-            TextEntry::make('created_at')->label('Create At'),
-            TextEntry::make('end_date')->label('End Date')->badge()->date(), // 表示フォーマットを指定
-            TextEntry::make('end_time')->label('End Time')->badge(),
-            CommentsEntry::make('filament_comments'),
+            Section::make('Order Detail')
+            ->schema([
+                Grid::make(3)
+                    ->schema([
+                        TextEntry::make('id')->label('Order No'),
+                        TextEntry::make('name')->label('Order Name'),
+                        TextEntry::make('status')->badge(),
+                        TextEntry::make('user.name')->label('Assignee'),
+                        TextEntry::make('project.name')->label('Project Name'),
+                    ]),
+                   
+        ]),
+        Section::make('')
+        ->schema([
+            Grid::make(1)
+                ->schema([
+                    TextEntry::make('explanation')->label('Description')->html(),
+                ]),
+            Grid::make(5)
+                ->schema([
+                    TextEntry::make('created_at')->label('Create Date')->date(),
+                    TextEntry::make('end_date')->label('End Date')->badge()->date(),
+                    TextEntry::make('end_time')->label('End Time')->badge(),
+                ]),
+    ]),
+         Section::make('Comment')
+        ->schema([
+            Grid::make(1)
+                ->schema([
+                    CommentsEntry::make('filament_comments'),
+                ]),
+]),
         ]);
         
 }
