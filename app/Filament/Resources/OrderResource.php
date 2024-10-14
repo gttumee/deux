@@ -50,7 +50,7 @@ class OrderResource extends Resource
                 ->columnSpan('full')
                 ->placeholder('Order name')
                 ->required(),
-            RichEditor::make('Description')
+            RichEditor::make('explanation')
                 ->columnSpan('full')
                 ->placeholder('Description and File URL')
                 ->disableToolbarButtons([
@@ -89,18 +89,16 @@ class OrderResource extends Resource
                 )
             ->columns([
                 TextColumn::make('id')
-                ->label('Order No')->sortable(),
-                TextColumn::make('name')->label('Order name')->sortable(),
-                TextColumn::make('project.name')->label('Project Name'),
+                ->label('No')->sortable(),
+                TextColumn::make('name')->label('Name')->sortable(),
+                TextColumn::make('project.name')->label('Project'),
                 TextColumn::make('status')
                 ->sortable()
                 ->badge()
                 ->color(fn ($record) => match ($record->status) {
-                    'New' => 'success',
+                    'New' => 'danger',
                     'Process' => 'warning',
-                    'Review' => 'success',
                     'Finish' => 'success',
-                     default => 'default',
                 }),
                 TextColumn::make('created_at')
                 ->formatStateUsing(fn ($state) => $state ? Carbon::parse($state)->format('Y-m-d') : '不明')->sortable()
@@ -195,7 +193,9 @@ class OrderResource extends Resource
                             }
                         );
                     }),
-            ], layout: FiltersLayout::AboveContent)
+            ], layout: FiltersLayout::AboveContentCollapsible)
+            
+            
               ->actions([
                 Tables\Actions\EditAction::make(),
                 tables\Actions\DeleteAction::make()

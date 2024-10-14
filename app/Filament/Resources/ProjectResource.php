@@ -35,7 +35,7 @@ class ProjectResource extends Resource
         ->schema([
           TextInput::make('name')->required()->maxLength(255)
           ->columnSpan('full'),
-          RichEditor::make('Description')->required()->maxLength(255)
+          RichEditor::make('explanation')->required()->maxLength(255)
           ->columnSpan('full')
           ->disableToolbarButtons([
             'blockquote',

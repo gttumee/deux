@@ -32,7 +32,13 @@ class ListOrders extends ListRecords
             'Today’s Completed' => Tab::make()
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('end_date', 'like', Carbon::today()->format('Y-m-d') . '%')),
             
-            'This Week' => Tab::make()
+            'New Orders' => Tab::make()
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'new')),
+            
+            'Finish Orders' => Tab::make()
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'finish')),    
+            
+                'This Week' => Tab::make()
                 ->modifyQueryUsing(fn (Builder $query) => $query->whereBetween('end_date', [
                     Carbon::now()->startOfWeek()->format('Y-m-d H:i:s'),
                     Carbon::now()->endOfWeek()->format('Y-m-d H:i:s')
