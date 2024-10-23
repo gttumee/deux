@@ -19,6 +19,8 @@ class ViewProject extends ViewRecord
                 ->button()
                 ->color('gray'),
             Actions\EditAction::make(),
-        ];
+            Action::make('view_activities')
+            ->url(fn($record) => ProjectResource::getUrl('activities', ['record' => $record])),
+    ];
     }
 }

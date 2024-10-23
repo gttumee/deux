@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Parallax\FilamentComments\Models\Traits\HasFilamentComments;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 
 class Order extends Model
 {
-    use HasFactory;
+    use HasFactory,LogsActivity;
     use HasFilamentComments;
     protected $fillable = [
         'name',
@@ -32,5 +34,13 @@ class Order extends Model
     public function project()
     {
         return $this->belongsTo(Project::class);
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['name', 'explanation','status', 'user.name','end_date','end_time','project.name'])
+        ->dontLogIfAttributesChangedOnly(['text'])
+        ->logOnlyDirty();
     }
 }

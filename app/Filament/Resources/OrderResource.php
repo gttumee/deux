@@ -23,6 +23,7 @@ use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Infolists\Infolist;
+use Filament\Notifications\Notification;
 use Parallax\FilamentComments\Infolists\Components\CommentsEntry;
 class OrderResource extends Resource
 {
@@ -199,6 +200,13 @@ class OrderResource extends Resource
               ->actions([
                 Tables\Actions\EditAction::make(),
                 tables\Actions\DeleteAction::make()
+                ->after(function ($record) {
+                    Notification::make()
+                        ->success()
+                        ->title('Order deleted successfully')
+                        ->body("Order id {$record->id} has been deleted.")
+                        ->sendToDatabase(auth()->user());
+                }),
                 
             ])
             ->bulkActions([
@@ -262,7 +270,7 @@ class OrderResource extends Resource
             'create' => Pages\CreateOrder::route('/create'),
             'edit' => Pages\EditOrder::route('/{record}/edit'),
             'view' => Pages\ViewOrder::route('/{record}'),
-
+            'activities' => Pages\ActivityLogPage::route('/{record}/activities'),
         ];
     }
 }

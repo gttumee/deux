@@ -14,6 +14,8 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use App\Filament\Resources\ProjectResource\Pages\ActivityLogPage;
+use Filament\Actions\Action;
 
 class ProjectResource extends Resource
 {
@@ -99,7 +101,7 @@ class ProjectResource extends Resource
             'create' => Pages\CreateProject::route('/create'),
             'edit' => Pages\EditProject::route('/{record}/edit'),
             'view' => Pages\ViewProject::route('/{record}'),
-
+            'activities' => Pages\ActivityLogPage::route('/{record}/activities'),
         ];
     }
 }

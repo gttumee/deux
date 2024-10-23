@@ -19,6 +19,8 @@ class ViewOrder extends ViewRecord
                 ->button()
                 ->color('gray'),
             Actions\EditAction::make(),
+            Action::make('view_activities')
+            ->url(fn($record) => OrderResource::getUrl('activities', ['record' => $record])),
         ];
     }
     
